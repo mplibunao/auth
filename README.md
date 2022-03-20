@@ -190,6 +190,8 @@ Check [GitHub repo](https://github.com/mercurius-js/auth/tree/master/examples) f
 
 ## Benchmarks
 
+- For metrics (cold-start) see [metrics.md](METRICS.md)
+
 ### Normal GraphQL Server Mode | Without Auth
 
 Last run: `2021-04-21`
