@@ -1,0 +1,71 @@
+"use strict";
+const start = process.hrtime();
+
+const Fastify = require("fastify");
+const mercurius = require("mercurius");
+
+const app = Fastify();
+
+const users = {
+  u1: {
+    id: "u1",
+    name: "John",
+  },
+  u2: {
+    id: "u2",
+    name: "Jane",
+  },
+};
+
+const schema = `
+directive @auth(
+  requires: Role = ADMIN,
+) on OBJECT | FIELD_DEFINITION
+
+enum Role {
+  ADMIN
+  REVIEWER
+  USER
+  UNKNOWN
+}
+
+type Query @extends {
+  me: User
+}
+
+type User @key(fields: "id") {
+  id: ID!
+  name: String! @auth(requires: ADMIN)
+}`;
+
+const resolvers = {
+  Query: {
+    me: (root, args, context, info) => {
+      return users.u1;
+    },
+  },
+  User: {
+    __resolveReference: (user, args, context, info) => {
+      return users[user.id];
+    },
+  },
+};
+
+app.register(mercurius, {
+  schema,
+  resolvers,
+  federationMetadata: true,
+  graphiql: false,
+  jit: 1,
+});
+
+const loadingTime = process.hrtime(start);
+app.listen(3001, () => {
+  const listenTime = process.hrtime(start);
+  require("fs").writeFileSync(
+    `${__filename}.txt`,
+    `${loadingTime} | ${listenTime}\n`,
+    { encoding: "utf-8", flag: "a" }
+  );
+  app.close();
+});

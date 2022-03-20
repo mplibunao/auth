@@ -11,7 +11,10 @@
     "lint:standard": "standard | snazzy",
     "lint:typescript": "standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin index.d.ts test/types/*.ts | snazzy",
     "typescript": "tsd",
-    "test": "npm run lint && npm run unit && npm run typescript"
+    "test": "npm run lint && npm run unit && npm run typescript",
+    "metrics:run": "node startup/_startup.js",
+    "metrics:summary": "node startup/_process-results.js -u",
+    "metrics": "npm run metrics:run && npm run metrics:summary"
   },
   "repository": {
     "type": "git",
