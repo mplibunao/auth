@@ -13,24 +13,6 @@ const runSample = (cb) => {
   };
 };
 
-const measureGatewayService1 = runSample(() => {
-  return new Promise((resolve) => {
-    new Worker(path.join(__dirname, "./gateway-service-1.js")).on(
-      "exit",
-      resolve
-    );
-  });
-});
-
-const measureGatewayService2 = runSample(() => {
-  return new Promise((resolve) => {
-    new Worker(path.join(__dirname, "./gateway-service-2.js")).on(
-      "exit",
-      resolve
-    );
-  });
-});
-
 const measureGatewayWithAuth = runSample(() => {
   return new Promise((resolve) => {
     new Worker(path.join(__dirname, "./gateway-with-auth.js")).on(
@@ -67,9 +49,7 @@ const measureNormalWithoutAuth = runSample(() => {
   });
 });
 
-measureGatewayService1()
-  .then(measureGatewayService2)
-  .then(measureGatewayWithAuth)
-  .then(measureGatewayWithoutAuth)
+measureGatewayWithAuth()
   .then(measureNormalWithAuth)
-  .then(measureNormalWithoutAuth);
+  .then(measureNormalWithoutAuth)
+  .then(measureGatewayWithoutAuth);
